@@ -109,7 +109,7 @@ namespace Structure_optimisation
         {
             get { return _userSelection; }
             set { _userSelection.AddRange(value);
-                _logFile.WriteLine($"Prescription : {_userSelection[0]}\nCôté : {_userSelection[1]}\nMachine : {_userSelection[2]}");}
+                _logFile.WriteLine($"Prescription : {_userSelection[0]}\nCôté : {_userSelection[1]}\nTechnique : {_userSelection[2]}\nMachine : {_userSelection[3]}\n");}
         }
         #endregion
 

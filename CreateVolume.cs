@@ -212,7 +212,7 @@ namespace Structure_optimisation
                             }
                             //MessageBox.Show("resized?: " + ImageResized + "\nerror?:" + error);
                         }
-                        catch(Exception ex) 
+                        catch (Exception ex)
                         {
                             Message = $"Erreur dans la manipulation de la table de traitement\n {ex.Message}";
                         }
@@ -490,8 +490,6 @@ namespace Structure_optimisation
             }
             #endregion
 
-            if (verbose >= 0)
-                MessageBox.Show("Les structures ont été créées.\nMerci de les vérifier !", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
             srf.Close();
         }
 

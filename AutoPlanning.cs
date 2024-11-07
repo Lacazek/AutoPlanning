@@ -10,20 +10,29 @@ using System.Windows;
 
 namespace VMS.TPS
 {
-	public class Script
-	{
-		public Script()
-		{
-		}
+    public class Script
+    {
+        public Script()
+        {
+        }
 
-		[MethodImpl(MethodImplOptions.NoInlining)]
-		public void Execute(ScriptContext context)
-		{
-            context.Patient.BeginModifications();
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public void Execute(ScriptContext context)
+        {
             UserInterface _interface = new UserInterface(context);
-            _interface.ShowDialog();
-			_interface.IsOpened(true);
-			MessageBox.Show($"AutoPlanning terminé, vérifiez la dosimétrie","Information",MessageBoxButton.OKCancel,MessageBoxImage.Information);
-		}
-	}
+            try
+            {
+                context.Patient.BeginModifications();
+                _interface.ShowDialog();
+                _interface.IsOpened(true);
+                MessageBox.Show($"AutoPlanning terminé, vérifiez la dosimétrie", "Information", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+            }
+            catch
+            {
+                _interface.IsOpened(true);
+                MessageBox.Show($"Une erreur est survenue", "Erreur", MessageBoxButton.OKCancel, MessageBoxImage.Error);
+            }
+        }
+    }
 }
+

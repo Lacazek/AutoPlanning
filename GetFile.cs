@@ -42,13 +42,21 @@ namespace Structure_optimisation
             try
             {
                 string directoryPath = Path.Combine(_path, @"Volume");
-                string[] parts = { model.UserSelection[0].Split('_').LastOrDefault().ToUpper(),
+                string treatmentType = model.UserSelection[2].ToUpper();
+                if (treatmentType == "ARCTHÉRAPIE" || treatmentType == "DYNAMIC ARC" || treatmentType == "STÉRÉOTAXIE")
+                {
+                    treatmentType = "VMAT"; // Standardiser en "VMAT" pour ces choix
+                }
+                string[] parts = {model.UserSelection[0].Split('_').LastOrDefault().ToUpper(),
                 model.UserSelection[1].ToUpper(),
-                model.UserSelection[2].ToUpper()};
+                treatmentType,
+                model.UserSelection[3].ToUpper()
+                };
 
 
                 string CorrectStructureFile = Directory.GetFiles(directoryPath, "*.txt")
-        .Select(file => Path.GetFileNameWithoutExtension(file)).FirstOrDefault(fileNameWithoutExtension => {
+        .Select(file => Path.GetFileNameWithoutExtension(file)).FirstOrDefault(fileNameWithoutExtension =>
+        {
             var segments = fileNameWithoutExtension.Split('_');
 
             return segments.Any(segment => segment.ToUpper().Equals(parts[0], StringComparison.OrdinalIgnoreCase)) &&
@@ -56,7 +64,7 @@ namespace Structure_optimisation
                    fileNameWithoutExtension.ToUpper().Contains(parts[2]);
         });
 
-                _userFileChoice = Path.Combine(directoryPath, CorrectStructureFile+ ".txt"); ;
+                _userFileChoice = Path.Combine(directoryPath, CorrectStructureFile + ".txt"); ;
                 Message = $"Fichier choisi : {_userFileChoice} \n";
                 _createVolume.CreationVolume(_userFileChoice);
             }
