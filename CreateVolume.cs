@@ -201,6 +201,7 @@ namespace Structure_optimisation
                             Couchposition.y = _image.Origin.y - Isocenter.y + 0;
                             Couchposition.z = _image.Origin.z - Isocenter.z + 100; // DSA = 100 cm
 
+
                             foreach (var item in _ss.Structures)
                             {
                                 if (item.Id.ToLower().Contains("couch"))
@@ -210,6 +211,7 @@ namespace Structure_optimisation
                                     item.CenterPoint.Update(VVector.Component.Z, Couchposition.z);
                                 }
                             }
+                            continue;
                             //MessageBox.Show("resized?: " + ImageResized + "\nerror?:" + error);
                         }
                         catch (Exception ex)
