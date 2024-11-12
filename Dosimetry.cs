@@ -36,12 +36,11 @@ namespace Opti_Struct
                 ConstructMyOptimizer(model);
                 model.GetContext.PlanSetup.SetCalculationModel(CalculationType.PhotonVolumeDose, "PHOTONS_AAA_15.6.06 V2");
                 model.GetContext.PlanSetup.SetCalculationModel(CalculationType.PhotonOptimization, "PO_15.6.06");
-                    //model.GetContext.PlanSetup.GetCalculationOptions("PO_18.0.0").SelectMany(x=>x.Key
+                //model.GetContext.PlanSetup.GetCalculationOptions("PO_18.0.0").SelectMany(x=>x.Key
 
             }
             if (model.UserSelection[2].ToUpper().Equals("IMRT"))
             {
-                OptimizationOption optimizationOption = new OptimizationOption();
                 model.GetContext.ExternalPlanSetup.Optimize(500);
                 model.GetContext.ExternalPlanSetup.CalculateLeafMotionsAndDose();
             }
@@ -50,8 +49,6 @@ namespace Opti_Struct
                 model.GetContext.ExternalPlanSetup.OptimizeVMAT();
                 model.GetContext.ExternalPlanSetup.CalculateDose();
             }
-
-            //model.GetContext.PlanSetup.no
         }
 
         // Opti OK sur CE et CTV dosi, voir les autres

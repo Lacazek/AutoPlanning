@@ -62,8 +62,6 @@ namespace Structure_optimisation
             Message = $"Taille du jeu de travail : {Environment.WorkingSet}";
             Message = $"User : {Environment.UserName}\n";
             Message = $"Fichier ouvert\n";
-            foreach (var x in context.ExternalPlanSetup.GetCalculationModel(VMS.TPS.Common.Model.Types.CalculationType.PhotonOptimization))
-                MessageBox.Show(x.ToString());
         }
 
         internal void LaunchPlanning()
