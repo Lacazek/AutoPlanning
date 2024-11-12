@@ -8,6 +8,9 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using Opti_Struct;
+using System.Linq;
+using System.Runtime.Remoting.Contexts;
+using System.Windows.Media.Media3D;
 
 
 namespace Structure_optimisation
@@ -21,8 +24,8 @@ namespace Structure_optimisation
 
         private string _userChoice;
         private string _rename;
-		private readonly string _fisherMan;
-		private GetFile _file;
+        private readonly string _fisherMan;
+        private GetFile _file;
         private StreamWriter _logFile;
 
         private Beams _beams;
@@ -59,6 +62,8 @@ namespace Structure_optimisation
             Message = $"Taille du jeu de travail : {Environment.WorkingSet}";
             Message = $"User : {Environment.UserName}\n";
             Message = $"Fichier ouvert\n";
+            foreach (var x in context.ExternalPlanSetup.GetCalculationModel(VMS.TPS.Common.Model.Types.CalculationType.PhotonOptimization))
+                MessageBox.Show(x.ToString());
         }
 
         internal void LaunchPlanning()
@@ -108,8 +113,11 @@ namespace Structure_optimisation
         internal List<string> UserSelection
         {
             get { return _userSelection; }
-            set { _userSelection.AddRange(value);
-                _logFile.WriteLine($"Prescription : {_userSelection[0]}\nCôté : {_userSelection[1]}\nTechnique : {_userSelection[2]}\nMachine : {_userSelection[3]}\n");}
+            set
+            {
+                _userSelection.AddRange(value);
+                _logFile.WriteLine($"Prescription : {_userSelection[0]}\nCôté : {_userSelection[1]}\nTechnique : {_userSelection[2]}\nMachine : {_userSelection[3]}\n");
+            }
         }
         #endregion
 
@@ -132,7 +140,7 @@ namespace Structure_optimisation
                 _logFile.WriteLine($"Fin du programme : {DateTime.Now}");
                 _logFile.WriteLine($"***************************Script terminé***************************");
                 _logFile.Close();
-                }
+            }
         }
 
         private void MessageChanged(object sender, string e)

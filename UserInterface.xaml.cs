@@ -31,6 +31,7 @@ namespace Structure_optimisation
             }
             Box_Loc_cote.Items.Add("Droit");
             Box_Loc_cote.Items.Add("Gauche");
+            Box_Loc_cote.Items.Add(string.Empty);
 
             Box_Loc_technique.Items.Add("3D");
             Box_Loc_technique.Items.Add("IMRT");

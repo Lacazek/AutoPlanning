@@ -33,6 +33,9 @@ namespace Opti_Struct
         {
             try
             {
+                // Check table Halcyon
+                IsThereCouch(model);
+
                 // Prescription
                 AddPrescription(model);
 
@@ -74,14 +77,13 @@ namespace Opti_Struct
 
                     if (model.UserSelection[1].Contains("Droit"))
                     {
-                        // à changer angle du colli : _collimatorAngle - 360
-                        model.GetContext.ExternalPlanSetup.AddFixedSequenceBeam(BeamParameters, 360 - _collimatorAngle , _gantryAngle - 180, _isocenter);
-                        model.GetContext.ExternalPlanSetup.AddFixedSequenceBeam(BeamParameters, 360 - _collimatorAngle , _gantryAngle - 190, _isocenter);
+                        model.GetContext.ExternalPlanSetup.AddFixedSequenceBeam(BeamParameters,  _collimatorAngle == 0 ?  0 : 360 -_collimatorAngle  , _gantryAngle + 180, _isocenter);
+                        model.GetContext.ExternalPlanSetup.AddFixedSequenceBeam(BeamParameters, _collimatorAngle == 0 ? 0 : 360 - _collimatorAngle , _gantryAngle + 190, _isocenter);
                     }
                     else
                     {
-                        model.GetContext.ExternalPlanSetup.AddFixedSequenceBeam(BeamParameters, 360 - _collimatorAngle, _gantryAngle + 180, _isocenter);
-                        model.GetContext.ExternalPlanSetup.AddFixedSequenceBeam(BeamParameters, 360 - _collimatorAngle, _gantryAngle + 190, _isocenter);
+                        model.GetContext.ExternalPlanSetup.AddFixedSequenceBeam(BeamParameters, Math.Abs(_collimatorAngle - 360), _gantryAngle - 180, _isocenter);
+                        model.GetContext.ExternalPlanSetup.AddFixedSequenceBeam(BeamParameters, Math.Abs(_collimatorAngle - 360), _gantryAngle - 190, _isocenter);
                     }
 
                     foreach (var (b, index) in model.GetContext.PlanSetup.Beams.Select((b, index) => (b, index)))
@@ -128,17 +130,17 @@ namespace Opti_Struct
                 for (int i = 0; i < 61; i++)
                 {
                     if (model.UserSelection[1].Contains("Droit"))
-                        gantryAngle[i] = 280 + i;
-                    else
                         gantryAngle[i] = 10 + i;
+                    else
+                        gantryAngle[i] = 280 + i;
                 }
 
                 // Angle du collimateur
                 int[] colliAngle = new int[31 + 30];
                 for (int i = 0; i < 30; i++)
                 {
-                    if (model.UserSelection[1].Contains("Gauche")) // à changer
-                        colliAngle[i] = 329 + i;
+                    if (model.UserSelection[1].Contains("Droit"))
+                        colliAngle[i] = 328 + i;
                     else
                         colliAngle[i] = 0 + i;
                 }
@@ -217,6 +219,17 @@ namespace Opti_Struct
                     new DoseValue(double.Parse(Regex.Match(firstLine.Split(':')[1], @"\d+\.?\d*").Value), DoseValue.DoseUnit.Gy),
                     double.Parse(Regex.Match(thirdLine.Split(':')[1], @"\d+").Value) / 100);
             }
+        }
+        internal void IsThereCouch(UserInterfaceModel model)
+        {
+            IReadOnlyList<Structure> couchStructureList = model.GetContext.StructureSet.Structures.ToList();
+            bool ImageResized = false;
+            string error = "Erreur dans la création de la table";
+
+            // Que pour l'Halcyon car le truebeam la table est ajouté sans problème par lecture du fichier txt
+            // Pour l'Halcyon cela est dépendant s'il y a un faisceau ou non (l'ajout se fait par lecture de la machine dans les paramètres faisceau)
+            if (!model.GetContext.StructureSet.Structures.Any(x=>x.DicomType.ToUpper().Equals("SUPPORT")))
+                 model.GetContext.StructureSet.AddCouchStructures("RDS_Couch_Top", PatientOrientation.NoOrientation, RailPosition.In, RailPosition.In, null, null, null, out couchStructureList, out ImageResized, out error);
         }
     }
 }
